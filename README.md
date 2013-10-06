@@ -9,13 +9,13 @@ What do you need
 The task
 --------
 
-Imagine that you want to calculate what programming langauges are most interesting for concrete Github user. There is no obvious way of how to do this, but we will choose next one: calculate total proportions of all language that were used to implement all project starred by concrete user.
+Imagine that you want to calculate what programming langauges are most interesting for concrete Github user ("language preferences"). There is no obvious way of how to do this, but we will choose next one: calculate total proportions of all language that were used to implement all project starred by concrete user.
 
 This computation fits perfectly to `riak_pipe` architecture: message-based streaming from one part of your application to another. We will use next "stages" to build pipe:
 
 **Stage 1**. Get number of pages in listing of starred projects
 
-**Stage 2**. Fetch each page (more info about API endpoint [http://developer.github.com/v3/activity/starring/]("List repositories being starred")) and extract "languages_url" for each repo
+**Stage 2**. Fetch each page (more info about API endpoint ["List repositories being starred"](http://developer.github.com/v3/activity/starring/)) and extract "languages_url" for each repo
 
 **Stage 3**. Fetch each "languages_url" and send each language to reducer
 
@@ -70,17 +70,17 @@ P.S. You will see much more information, I removed all lager messages to show th
 Tags
 ----
 
-* v1.0 - Rough implementation that you can run and test
+* [https://github.com/kachayev/riak-pipe-workshop/tree/v1.0](v1.0) - Rough implementation that you can run and test
 
-* v1.1 - Code cleanup
+* v1.1 - [todo] Code cleanup
 
-* v2.0 - Work with backpresure facilities, tracing / logging configuration
+* v2.0 - [todo] Work with backpresure facilities, tracing / logging configuration
 
-* v2.1 - Error propagation
+* v2.1 - [todo] Error propagation
 
-* v3.0 - Multi-nodes projects, cluster management, queues handoff
+* v3.0 - [todo] Multi-nodes projects, cluster management, queues handoff
 
-* v3.1 - Testing in multi-nodes environment
+* v3.1 - [todo] Testing in multi-nodes environment
 
 Licence
 -------
