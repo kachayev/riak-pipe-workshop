@@ -77,9 +77,11 @@ $ GITHUB_AUTH=<...> make console
 Tags
 ----
 
+If you are new in `riak_pipe` I suggest you to start browsing code from `v1.0` tag instead of `master` branch. There are many lines of boilerplate code in initial implementation but it's really much more easy to undestand what's going on. Latest tags are mostly about high-level patterns instead of low-level details.
+
 * [v1.0](https://github.com/kachayev/riak-pipe-workshop/tree/v1.0) - Rough implementation that you can run and test
 
-* v1.1 - [todo] Code cleanup
+* [v1.1](https://github.com/kachayev/riak-pipe-workshop/tree/v1.1) - Code cleanup
 
 * v1.2 - [todo] Local caching in order to run tests without connection to internet
 
@@ -88,6 +90,10 @@ Tags
 * v2.1 - [todo] Error propagation
 
 * v2.2 - [todo] Collect stat about pipes/fittings/queues
+
+* v2.3 - [todo] Built-in fitting modules
+
+* v2.4 - [todo] Implement your own fitting module, when/why/how
 
 * v3.0 - [todo] Multi-nodes projects, cluster management, queues handoff
 
