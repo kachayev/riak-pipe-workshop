@@ -36,13 +36,13 @@ Find next lines:
 
 ```shell
 > GET / HTTP/1.1
-> Authorization: Basic GITHUB_AUTH
+> Authorization: Basic __YOUR_GITHUB_AUTH__
 ```
 
 If you are ready we can move on:
 
 ```shell
-$ GITHUB_AUTH=<...> make deps compile console
+$ GITHUB_AUTH=__YOUR_GITHUB_AUTH__ make deps compile console
 (github@127.0.0.1)1> github:preferences("kachayev").
 [{<<"Erlang">>,28.906233446829255},
  {<<"Scala">>,12.696560617387881},
@@ -58,7 +58,7 @@ $ GITHUB_AUTH=<...> make deps compile console
 You will see much more information, I removed all lager messages to show the key idea. If you want to get all information about what's going on, use `trace` option:
 
 ```shell
-$ GITHUB_AUTH=<...> make console
+$ GITHUB_AUTH=__YOUR_GITHUB_AUTH__ make console
 (github@127.0.0.1)1> github:preferences("kachayev", [trace]).
 20:09:16.183 [info] langs_counter: {trace,all,{fitting,init_started}}
 20:09:16.183 [info] langs_counter: {trace,all,{fitting,init_finished}}
@@ -98,6 +98,8 @@ If you are new in `riak_pipe` I suggest you to start browsing code from `v1.0` t
 * v3.0 - [todo] Multi-nodes projects, cluster management, queues handoff
 
 * v3.1 - [todo] Testing in multi-nodes environment
+
+* v4.0 - [todo] Simples web-based interface for `github` module calls
 
 Licence
 -------
