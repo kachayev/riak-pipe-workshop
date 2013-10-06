@@ -99,7 +99,7 @@ If you are new in `riak_pipe` I suggest you to start browsing code from `v1.0` t
 
 * v3.1 - [todo] Testing in multi-nodes environment
 
-* v4.0 - [todo] Simples web-based interface for `github` module calls
+* v4.0 - [todo] Simplest web-based interface for `github` module calls
 
 Licence
 -------
