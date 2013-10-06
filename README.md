@@ -9,7 +9,7 @@ What do you need
 The task
 --------
 
-Imagine that you want to calculate what programming langauges are most interesting for concrete Github user ("language preferences"). There is no obvious way of how to do this, but we will choose next one: calculate total proportions of all language that were used to implement all project starred by concrete user.
+Imagine that you want to calculate what programming langauges are most interesting for concrete Github user ("language preferences"). There is no obvious way of how to do this, but we will choose next one: calculate total proportions of all language that were used to implement all project starred by concrete user. To get more information about task as well as clean vision of how to use Github API to perform all necessary requests, see workshop slides (todo: add link to slides).
 
 This computation fits perfectly to `riak_pipe` architecture: message-based streaming from one part of your application to another. We will use next "stages" to build pipe:
 
@@ -43,16 +43,6 @@ If you are ready we can move on:
 
 ```shell
 $ GITHUB_AUTH=<...> make deps compile console
-erl \
-		-name github@127.0.0.1 \
-		-setcookie github-users-analyzer \
-		-riak_core handoff_port 4090 \
-		-riak_core web_port 4091 \
-		-sasl errlog_type error \
-		-pa deps/*/ebin ebin \
-		-github auth GITHUB_AUTH
-		-s github
-Eshell V5.9.3.1  (abort with ^G)
 (github@127.0.0.1)1> github:preferences("kachayev").
 [{<<"Erlang">>,28.906233446829255},
  {<<"Scala">>,12.696560617387881},
@@ -65,7 +55,24 @@ Eshell V5.9.3.1  (abort with ^G)
 (github@127.0.0.1)2>
 ```
 
-P.S. You will see much more information, I removed all lager messages to show the key idea.
+You will see much more information, I removed all lager messages to show the key idea. If you want to get all information about what's going on, use `trace` option:
+
+```shell
+$ GITHUB_AUTH=<...> make console
+(github@127.0.0.1)1> github:preferences("kachayev", [trace]).
+20:09:16.183 [info] langs_counter: {trace,all,{fitting,init_started}}
+20:09:16.183 [info] langs_counter: {trace,all,{fitting,init_finished}}
+20:09:16.183 [info] fetch repo languages: {trace,all,{fitting,init_started}}
+20:09:16.183 [info] fetch repo languages: {trace,all,{fitting,init_finished}}
+20:09:16.184 [info] fetch user stars list: {trace,all,{fitting,init_started}}
+20:09:16.184 [info] fetch user stars list: {trace,all,{fitting,init_finished}}
+20:09:16.184 [info] fetch number of stars pages: {trace,all,{fitting,init_started}}
+20:09:16.184 [info] fetch number of stars pages: {trace,all,{fitting,init_finished}}
+20:09:16.190 [info] fetch number of stars pages: {trace,all,{fitting,{get_details,#Ref<0.0.0.759>,456719261665907161938651510223838443642478919680,...}}}
+20:09:16.192 [info] fetch number of stars pages: {trace,all,{vnode,{start,456719261665907161938651510223838443642478919680}}}
+20:09:16.193 [info] fetch number of stars pages: {trace,all,{vnode,{queued,456719261665907161938651510223838443642478919680,[...]}}}
+...
+```
 
 Tags
 ----
@@ -74,9 +81,13 @@ Tags
 
 * v1.1 - [todo] Code cleanup
 
+* v1.2 - [todo] Local caching in order to run tests without connection to internet
+
 * v2.0 - [todo] Work with backpresure facilities, tracing / logging configuration
 
 * v2.1 - [todo] Error propagation
+
+* v2.2 - [todo] Collect stat about pipes/fittings/queues
 
 * v3.0 - [todo] Multi-nodes projects, cluster management, queues handoff
 
@@ -85,6 +96,6 @@ Tags
 Licence
 -------
 
-MIT
+**MIT**
 
 For more information, see LICENCE file.

@@ -3,6 +3,7 @@
 -include_lib("riak_pipe/include/riak_pipe.hrl").
 
 -export([preferences/1]).
+-export([preferences/2]).
 -export([start/0]).
 -export([stop/0]).
 
@@ -61,8 +62,13 @@ reduce_repo_langs(Lang, Counts, Partition, Fitting) ->
     {ok, [lists:sum(Counts)]}.
 
 preferences(User) ->
-    %% Options = [{trace, all}, {log, lager}],
-    Options = [],
+    preferences(User, []).
+
+preferences(User, Config) ->
+    Options = case Config of
+		  [] -> [];
+		  [trace] -> [{trace, all}, {log, lager}]
+	      end,
     Spec = [#fitting_spec{name="fetch number of stars pages",
 			  module=riak_pipe_w_xform,
 			  arg=fun ?MODULE:access_github_user/3,

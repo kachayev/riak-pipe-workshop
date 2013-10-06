@@ -18,7 +18,7 @@ console:
 		-riak_core web_port 4091 \
 		-sasl errlog_type error \
 		-pa deps/*/ebin ebin \
-		-github auth "$(GITHUB_AUTH)" \
+		-github auth $(GITHUB_AUTH) \
 		-s $(APP)
 
 compile:
