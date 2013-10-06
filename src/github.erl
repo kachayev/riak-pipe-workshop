@@ -38,6 +38,7 @@ preferences(User, Config) ->
     {ok, Pipe} = riak_pipe:exec(Spec, Options),
 
     %% send username to the first stage
+    %% xxx: this will fail on backpresure failure, will resolve in future
     ok = riak_pipe:queue_work(Pipe, User),
 
     %% send end-of-input signal
@@ -91,7 +92,7 @@ reduce_repo_langs(_Lang, Counts) ->
 streamer(Fun) ->
     fun(Args, Partition, Fitting) ->
 	    lists:foreach(fun(El) ->
-				  %% xxx: this will fail on backpresure failure
+				  %% xxx: this may fail, will resolve in future
 				  ok = riak_pipe_vnode_worker:send_output(El, Partition, Fitting)
 			  end, Fun(Args))
     end.
