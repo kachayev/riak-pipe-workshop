@@ -70,7 +70,7 @@ P.S. You will see much more information, I removed all lager messages to show th
 Tags
 ----
 
-* [https://github.com/kachayev/riak-pipe-workshop/tree/v1.0](v1.0) - Rough implementation that you can run and test
+* [v1.0](https://github.com/kachayev/riak-pipe-workshop/tree/v1.0) - Rough implementation that you can run and test
 
 * v1.1 - [todo] Code cleanup
 
