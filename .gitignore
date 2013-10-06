@@ -1,0 +1,11 @@
+*~
+erl_crash*
+.eunit
+deps
+ebin
+logs
+test/*.beam
+*.beam
+*#
+log/
+data/
