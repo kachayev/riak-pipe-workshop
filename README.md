@@ -101,9 +101,9 @@ If you are new in `riak_pipe` I suggest you to start browsing code from `v1.0` t
 
 * v4.0 - [todo] Simplest web-based interface for `github` module calls
 
-Licence
+License
 -------
 
 **MIT**
 
-For more information, see LICENCE file.
+For more information, see LICENSE file.
