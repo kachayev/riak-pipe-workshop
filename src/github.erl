@@ -129,6 +129,7 @@ extract_languages_stat(All, Total) ->
 
 start() ->
     ok = application:start(lager),
+    ok = application:start(asn1),
     ok = application:start(sasl),
     ok = application:start(crypto),
     ok = application:start(os_mon),
@@ -140,7 +141,7 @@ start() ->
     ok = application:start(riak_sysmon),
     ok = application:start(riak_core),
     ok = application:start(riak_pipe),
-    application:start(github).
+    ok = application:start(github).
 
 stop() ->
     application:stop(github).

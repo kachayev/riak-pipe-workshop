@@ -5,10 +5,9 @@ COOKIE := github-users-analyzer
 
 SKIP_DEPS ?= false
 
-.PHONY: all deps
+.PHONY: all console compile deps update-deps
 
-all: 
-	$(REBAR) deps compile
+all: deps compile
 
 console:
 	erl \
