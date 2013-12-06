@@ -14,7 +14,8 @@
 
 -define(COLLECT_TIMEOUT, 100000).
 -define(HEADERS(), [{"Authorization",
-		     "Basic " ++ atom_to_list(element(2, application:get_env(github, auth)))}]).
+            "Basic " ++ atom_to_list(element(2, application:get_env(github, auth)))},
+            {"User-Agent", "riak_pipe_workshop"}]).
 
 %% ===================================================================
 %% Public API
