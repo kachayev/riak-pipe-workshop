@@ -142,7 +142,8 @@ start() ->
     ok = application:start(riak_sysmon),
     ok = application:start(riak_core),
     ok = application:start(riak_pipe),
-    ok = application:start(github).
+    ok = application:start(github),
+    {ok, _} = application:get_env(github, auth).
 
 stop() ->
     application:stop(github).
