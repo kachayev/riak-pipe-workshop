@@ -7,14 +7,15 @@
 -export([start/0]).
 -export([stop/0]).
 
--export([access_github_user/1,
-	 access_github_stars/1,
-	 extract_repo_langs/1,
-	 reduce_repo_langs/2]).
+-export([access_github_user/2,
+     access_github_stars/2,
+     extract_repo_langs/2,
+     reduce_repo_langs/2]).
 
 -define(COLLECT_TIMEOUT, 100000).
 -define(HEADERS(), [{"Authorization",
-		     "Basic " ++ atom_to_list(element(2, application:get_env(github, auth)))}]).
+            "Basic " ++ atom_to_list(element(2, application:get_env(github, auth)))},
+            {"User-Agent", "riak_pipe_workshop"}]).
 
 %% ===================================================================
 %% Public API
@@ -26,15 +27,16 @@ preferences(User) ->
 preferences(User, Config) ->
     %% define new riak_pipe
     Spec = [
-	    stream_to(num_pages, fun access_github_user/1, group_to(<<"user">>)),
-	    stream_to(fetch_page, fun access_github_stars/1, group_to(<<"page">>)),
-	    stream_to(langs_repo, fun extract_repo_langs/1, group_to(<<"repo">>)),
-	    reduce(langs_counter, fun reduce_repo_langs/2)
-	   ],
+        stream_to(num_pages, fun access_github_user/2, group_to(<<"user">>)),
+        stream_to(fetch_page, fun access_github_stars/2, group_to(<<"page">>)),
+        stream_to(langs_repo, fun extract_repo_langs/2, group_to(<<"repo">>)),
+        reduce(langs_counter, fun reduce_repo_langs/2)
+       ],
     Options = case Config of
-		  [] -> [];
-		  [trace] -> [{trace, all}, {log, lager}]
-	      end,
+        [] -> [];
+        [trace_github] -> [{trace, [github]}, {log, lager}];
+        [trace] -> [{trace, all}, {log, lager}]
+    end,
     {ok, Pipe} = riak_pipe:exec(Spec, Options),
 
     % wait for all vnodes to be up
@@ -57,8 +59,9 @@ preferences(User, Config) ->
 %% ===================================================================
 
 %% stage 1
-access_github_user(User) ->
+access_github_user(Fitting, User) ->
     Url = "https://api.github.com/users/" ++ User ++ "/starred",
+    riak_pipe_log:trace(Fitting, [github], [fetching, Url]),
     {ok, {{_, 200, _}, Headers, _Body}} = httpc:request(head, {Url, ?HEADERS()}, [], []),
     Link = proplists:get_value("link", Headers),
     case re:run(Link, "page=(\\d?)", [global, {capture, all, list}]) of
@@ -70,8 +73,9 @@ access_github_user(User) ->
     end.
 
 %% stage 2
-access_github_stars({User, Page}) ->
+access_github_stars(Fitting, {User, Page}) ->
     Url = "https://api.github.com/users/" ++ User ++ "/starred?page=" ++ Page,
+    riak_pipe_log:trace(Fitting, [github], [fetching, Url]),
     Repos = fetch_json(Url),
     lists:map(fun({Repo}) ->
 		      LanguagesUrl = proplists:get_value(<<"languages_url">>, Repo),
@@ -79,7 +83,8 @@ access_github_stars({User, Page}) ->
 	      end, Repos).
 
 %% stage 3
-extract_repo_langs(LanguagesUrl) ->
+extract_repo_langs(Fitting, LanguagesUrl) ->
+    riak_pipe_log:trace(Fitting, [github], [fetching, LanguagesUrl]),
     %% json format is {[{Lang :: binary(), Count :: integer()}]}
     element(1, fetch_json(LanguagesUrl)).
 
@@ -96,7 +101,7 @@ streamer(Fun) ->
 	    lists:foreach(fun(El) ->
 				  %% xxx: this may fail, will resolve in future
 				  ok = riak_pipe_vnode_worker:send_output(El, Partition, Fitting)
-			  end, Fun(Args))
+			  end, Fun(Fitting, Args))
     end.
 
 reducer(Fun) ->
@@ -131,6 +136,7 @@ extract_languages_stat(All, Total) ->
 
 start() ->
     ok = application:start(lager),
+    ok = application:start(asn1),
     ok = application:start(sasl),
     ok = application:start(crypto),
     ok = application:start(os_mon),
@@ -142,7 +148,8 @@ start() ->
     ok = application:start(riak_sysmon),
     ok = application:start(riak_core),
     ok = application:start(riak_pipe),
-    application:start(github).
+    ok = application:start(github),
+    {ok, _} = application:get_env(github, auth).
 
 stop() ->
     application:stop(github).
